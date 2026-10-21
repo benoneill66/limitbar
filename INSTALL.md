@@ -7,7 +7,7 @@ Follow these steps exactly. Do not improvise other install methods.
 2. **Download and show the installer** in one command (pinned to one commit — do not substitute `main`;
    shell variables may not survive between your tool calls, so keep the printed path):
    ```bash
-   d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/12106c90349cf51f5df43c24ce41519d209256ee/install.sh && echo "$d/install.sh" && cat "$d/install.sh"
+   d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/f9d9eca2e3a6857e973ef3dedad9b797c2dd402f/install.sh && echo "$d/install.sh" && cat "$d/install.sh"
    ```
 3. **Tell the user** in two or three sentences what it does: downloads the release zip from GitHub,
    checks its SHA-256 against the digest written in the script (and GitHub build provenance if the

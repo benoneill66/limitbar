@@ -21,11 +21,11 @@ Paste this into your AI agent (Claude Code, Codex, Gemini, Grok…):
 Or run it yourself in Terminal:
 
 ```bash
-d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/12106c90349cf51f5df43c24ce41519d209256ee/install.sh && bash "$d/install.sh"
+d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/f9d9eca2e3a6857e973ef3dedad9b797c2dd402f/install.sh && bash "$d/install.sh"
 ```
 
 The link is pinned to one commit, so the script you run is exactly the one you can read
-[here](https://github.com/dancik/limitbar/blob/12106c90349cf51f5df43c24ce41519d209256ee/install.sh). It downloads the release
+[here](https://github.com/dancik/limitbar/blob/f9d9eca2e3a6857e973ef3dedad9b797c2dd402f/install.sh). It downloads the release
 build, checks its SHA-256 against the digest written into that script, checks GitHub's build provenance
 when the [GitHub CLI](https://cli.github.com) is installed and signed in, and copies `LimitBar.app` to
 `~/Applications`. No `sudo`, nothing outside `~/Applications` and `~/Library/Caches/limitbar`.
@@ -129,7 +129,7 @@ Found a problem? See [SECURITY.md](SECURITY.md).
 ## Uninstall
 
 ```bash
-d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/12106c90349cf51f5df43c24ce41519d209256ee/install.sh && bash "$d/install.sh" --uninstall
+d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/f9d9eca2e3a6857e973ef3dedad9b797c2dd402f/install.sh && bash "$d/install.sh" --uninstall
 ```
 
 or quit LimitBar from its panel and delete `~/Applications/LimitBar.app` and `~/Library/Caches/limitbar`.
