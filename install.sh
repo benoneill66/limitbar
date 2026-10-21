@@ -14,8 +14,8 @@ REPO="dancik/limitbar"
 VERSION="1.0.2"
 # Pinned by this commit of install.sh: the release zip must match it byte for byte, and the source build
 # must check out exactly this commit.
-ZIP_SHA256="e82d47c0a906ad5aaf0fedb47ebf14715eefdba37cf148212394fd400f3dc4d7"
-SOURCE_COMMIT="47c3fa4a795f0b2ffdad5bb1e8bcc6a955541e7b"
+ZIP_SHA256="90602db824b0b26dc86a531f293b7a2e559dd6f92cd503c935055420aa80ab37"
+SOURCE_COMMIT="40db32057998ff7f2b8c43d105ff2ef7fd14e35d"
 
 APP_DIR="$HOME/Applications"
 APP="$APP_DIR/LimitBar.app"
