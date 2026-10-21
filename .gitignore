@@ -1,0 +1,14 @@
+.build/
+build/
+*.zip
+SHA256SUMS
+.DS_Store
+.swiftpm/
+# never commit anything that could hold an account or a reading
+.env*
+*.db
+*.sqlite*
+*cookie*
+*session*.json
+state.json
+claude-status.json
