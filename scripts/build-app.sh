@@ -8,8 +8,13 @@ OUT="${1:?usage: build-app.sh <out-dir> [--universal]}"
 VERSION="$(cat VERSION)"
 
 if [[ "${2:-}" == "--universal" ]]; then
-  swift build -c release --arch arm64 --arch x86_64
-  BIN="$(swift build -c release --arch arm64 --arch x86_64 --show-bin-path)/LimitBar"
+  # One arch at a time, then lipo: SwiftPM's multi-arch (xcbuild) path rejects the Swift 5 language mode.
+  for a in arm64 x86_64; do swift build -c release --arch "$a"; done
+  BIN="$(mktemp -d)/LimitBar"
+  lipo -create -output "$BIN" \
+    "$(swift build -c release --arch arm64 --show-bin-path)/LimitBar" \
+    "$(swift build -c release --arch x86_64 --show-bin-path)/LimitBar"
+  lipo -info "$BIN"
 else
   swift build -c release
   BIN="$(swift build -c release --show-bin-path)/LimitBar"
