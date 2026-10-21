@@ -16,11 +16,12 @@ cat > "$T/agy" <<'S'
 #!/bin/bash
 echo "Error: not signed in. Please sign in by running agy."; exit 1
 S
+# Codex 0.163 signed out, verbatim: `login status` says it on stderr only; app-server answers with an error.
 cat > "$T/codex" <<'S'
 #!/bin/bash
-[[ "$1 $2" == "login status" ]] && { echo "Not logged in"; exit 1; }
+[[ "$1 $2" == "login status" ]] && { echo "Not logged in" >&2; exit 1; }
 read -r _; echo '{"jsonrpc":"2.0","id":1,"result":{}}'; read -r _; read -r _
-echo '{"jsonrpc":"2.0","id":2,"error":{"code":-32600,"message":"not logged in"}}'
+echo '{"error":{"code":-32600,"message":"codex account authentication required to read rate limits"},"id":2}'
 S
 # grok runs under Resources/cli.sb, which lets only its own executable (and install folder) run. The fake
 # Grok is a tiny compiled program, the way the real one is a native binary.

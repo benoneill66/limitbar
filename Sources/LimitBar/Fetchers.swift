@@ -38,7 +38,7 @@ enum Fetch {
     static func signedOutText(_ s: String) -> Bool {
         let t = s.lowercased()
         return ["not logged in", "not signed in", "please log in", "please sign in", "login required",
-                "unauthenticated", "unauthorized", "no credentials", "not authenticated"].contains { t.contains($0) }
+                "unauthenticated", "unauthorized", "no credentials", "not authenticated", "authentication required"].contains { t.contains($0) }
     }
 
     // MARK: Claude — the statusline file (free) first; `claude -p /usage` only when it is stale.

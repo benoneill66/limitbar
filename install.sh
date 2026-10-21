@@ -11,7 +11,7 @@
 set -euo pipefail
 
 REPO="dancik/limitbar"
-VERSION="1.0.1"
+VERSION="1.0.2"
 # Pinned by this commit of install.sh: the release zip must match it byte for byte, and the source build
 # must check out exactly this commit.
 ZIP_SHA256="e82d47c0a906ad5aaf0fedb47ebf14715eefdba37cf148212394fd400f3dc4d7"

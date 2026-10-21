@@ -118,7 +118,7 @@ How it protects you:
 - **Release builds** are made by [`.github/workflows/release.yml`](.github/workflows/release.yml) on
   GitHub-hosted runners from the tagged commit, with a signed
   [build provenance attestation](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
-  Check it yourself: `gh attestation verify LimitBar-1.0.1.zip --repo dancik/limitbar`.
+  Check it yourself: `gh attestation verify LimitBar-1.0.2.zip --repo dancik/limitbar`.
 
 The app is ad-hoc signed, not notarized (there is no paid Apple Developer ID behind it). Installed with
 the script, macOS opens it normally; a zip downloaded **in a browser** will be blocked by Gatekeeper —
