@@ -58,13 +58,15 @@ else
   got="$(shasum -a 256 "$STAGE/LimitBar.zip" | cut -d' ' -f1)"
   [[ "$got" == "$ZIP_SHA256" ]] || die "SHA-256 mismatch: got $got, expected $ZIP_SHA256 — not installing"
   say "SHA-256 verified"
-  if command -v gh >/dev/null 2>&1; then
+  # Checked whenever the GitHub CLI can do it (installed and signed in); the pinned SHA-256 above is
+  # always checked and is what guarantees these are the published bytes.
+  if command -v gh >/dev/null 2>&1 && gh auth status --hostname github.com >/dev/null 2>&1; then
     gh attestation verify "$STAGE/LimitBar.zip" --repo "$REPO" \
       --signer-workflow "$REPO/.github/workflows/release.yml" --deny-self-hosted-runners >/dev/null \
       || die "build provenance check failed — not installing"
     say "Build provenance verified (built by this repo's release workflow on GitHub-hosted runners)"
   else
-    echo "(GitHub CLI not installed: build provenance not checked; the pinned SHA-256 above was.)"
+    echo "(GitHub CLI not installed or not signed in: build provenance not checked; the pinned SHA-256 above was.)"
   fi
   # Refuse archives with absolute paths, '..' or symlinks before extracting anything.
   if zipinfo -1 "$STAGE/LimitBar.zip" | grep -Eq '(^/|(^|/)\.\.(/|$))'; then die "unsafe path in archive"; fi

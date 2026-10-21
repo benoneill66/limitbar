@@ -28,6 +28,12 @@ jobs:
         run: |
           ~/Applications/LimitBar.app/Contents/MacOS/LimitBar --probe | tee p1.json
           /usr/bin/python3 -c 'import json; d=json.load(open("p1.json")); s={k:v["state"] for k,v in d.items()}; print(s); assert set(s.values())=={"missing"}, s'
+      - name: reinstall with the GitHub CLI signed in → build provenance must be verified too
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          bash "$D/install.sh" | tee reinstall.log
+          grep -q "Build provenance verified" reinstall.log
       - name: install real CLIs, do not sign in
         run: |
           curl -fsSL https://claude.ai/install.sh | bash
