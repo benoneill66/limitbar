@@ -6,11 +6,11 @@ Follow these steps exactly. Do not improvise other install methods.
 1. **Check the machine.** Run `sw_vers -productVersion`. Continue only on macOS 14 or later.
 2. **Download the installer** (pinned to one commit; do not substitute `main`):
    ```bash
-   d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/746928f7ba250aaec29adcaa9bf8ec4ee6e6d855/install.sh && echo "$d/install.sh"
+   d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/b07c39299dca7186f7ae3a3b1520211aede8429c/install.sh && echo "$d/install.sh"
    ```
    Use the printed path (a fresh private folder) in the next steps — never a fixed path in /tmp.
 3. **Read it** (`cat "$d/install.sh"`) and tell the user in one or two sentences what it does:
-   downloads the release zip, verifies its SHA-256 (and build provenance if `gh` is installed), installs
+   downloads the release zip, verifies its SHA-256 (and build provenance if `gh` is installed and signed in), installs
    to `~/Applications`, no sudo.
 4. **Run it:** `bash "$d/install.sh"`. Never run it with `sudo`. If it stops with a
    verification error, stop and report the error — do not work around it.

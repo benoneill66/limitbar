@@ -21,13 +21,13 @@ Paste this into your AI agent (Claude Code, Codex, Gemini, Grok…):
 Or run it yourself in Terminal:
 
 ```bash
-d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/746928f7ba250aaec29adcaa9bf8ec4ee6e6d855/install.sh && bash "$d/install.sh"
+d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/b07c39299dca7186f7ae3a3b1520211aede8429c/install.sh && bash "$d/install.sh"
 ```
 
 The link is pinned to one commit, so the script you run is exactly the one you can read
-[here](https://github.com/dancik/limitbar/blob/746928f7ba250aaec29adcaa9bf8ec4ee6e6d855/install.sh). It downloads the release
+[here](https://github.com/dancik/limitbar/blob/b07c39299dca7186f7ae3a3b1520211aede8429c/install.sh). It downloads the release
 build, checks its SHA-256 against the digest written into that script, checks GitHub's build provenance
-when the [GitHub CLI](https://cli.github.com) is installed, and copies `LimitBar.app` to
+when the [GitHub CLI](https://cli.github.com) is installed and signed in, and copies `LimitBar.app` to
 `~/Applications`. No `sudo`, nothing outside `~/Applications` and `~/Library/Caches/limitbar`.
 
 Prefer to compile it yourself? `bash "$d/install.sh" --from-source` builds the same pinned
@@ -128,7 +128,7 @@ Found a problem? See [SECURITY.md](SECURITY.md).
 ## Uninstall
 
 ```bash
-d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/746928f7ba250aaec29adcaa9bf8ec4ee6e6d855/install.sh && bash "$d/install.sh" --uninstall
+d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/b07c39299dca7186f7ae3a3b1520211aede8429c/install.sh && bash "$d/install.sh" --uninstall
 ```
 
 or quit LimitBar from its panel and delete `~/Applications/LimitBar.app` and `~/Library/Caches/limitbar`.
