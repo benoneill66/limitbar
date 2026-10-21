@@ -4,30 +4,34 @@ You are installing LimitBar, a macOS menu bar app that shows the user's AI CLI u
 Follow these steps exactly. Do not improvise other install methods.
 
 1. **Check the machine.** Run `sw_vers -productVersion`. Continue only on macOS 14 or later.
-2. **Download the installer** (pinned to one commit; do not substitute `main`):
+2. **Download and show the installer** in one command (pinned to one commit — do not substitute `main`;
+   shell variables may not survive between your tool calls, so keep the printed path):
    ```bash
-   d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/b07c39299dca7186f7ae3a3b1520211aede8429c/install.sh && echo "$d/install.sh"
+   d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/b07c39299dca7186f7ae3a3b1520211aede8429c/install.sh && echo "$d/install.sh" && cat "$d/install.sh"
    ```
-   Use the printed path (a fresh private folder) in the next steps — never a fixed path in /tmp.
-3. **Read it** (`cat "$d/install.sh"`) and tell the user in one or two sentences what it does:
-   downloads the release zip, verifies its SHA-256 (and build provenance if `gh` is installed and signed in), installs
-   to `~/Applications`, no sudo.
-4. **Run it:** `bash "$d/install.sh"`. Never run it with `sudo`. If it stops with a
-   verification error, stop and report the error — do not work around it.
-5. **Check what LimitBar sees:**
+3. **Tell the user** in two or three sentences what it does: downloads the release zip from GitHub,
+   checks its SHA-256 against the digest written in the script (and GitHub build provenance if the
+   GitHub CLI `gh` is installed and signed in — without it the SHA-256 check alone applies, which is
+   expected), quits a running LimitBar, replaces `~/Applications/LimitBar.app` and opens it. No sudo.
+4. **Run it:** `bash <the printed path>`. Never with `sudo`. If it stops with a verification error, stop
+   and report the error — do not work around it.
+5. **Check what LimitBar sees** (asks every installed CLI once; allow up to ~60 s):
    ```bash
    ~/Applications/LimitBar.app/Contents/MacOS/LimitBar --probe
    ```
-   For each of `claude`, `codex`, `gemini`, `grok`, report the `state`:
-   - `ok` — working; mention the main percentage.
+   Services are `claude` (Claude Code), `codex` (Codex CLI), `gemini` (the Google Antigravity CLI,
+   `agy`) and `grok` (Grok Build). For each, report the `state`:
+   - `ok` — working. `bar.used` is the percentage **used** (not left) of the window in the menu bar,
+     rounded; `notes` may add details worth passing on.
    - `missing` — that CLI is not installed. Only mention it if the user uses that service.
    - `signedOut` — tell the user to sign in **themselves**: `claude` then `/login`, `codex login`,
-     `agy` (first run), or `grok login`.
-   - `untrusted` — the CLI file is writable by other accounts; tell the user, do not change permissions
-     yourself.
+     run `agy` once, or `grok login`.
+   - `untrusted` — the CLI (or its interpreter) is writable by another account, so LimitBar will not
+     run it; tell the user, do not change permissions yourself.
    - `failed` — report the `error` text.
 6. **Never** ask the user for, read, copy or print any token, API key, cookie or credential file. Signing
    in is always done by the user inside the official CLI.
 7. Tell the user: LimitBar is in the menu bar; hover it for details; the panel has "Launch at Login".
 
-To remove it later: download the installer the same way and run it with `--uninstall`.
+To remove it later: run step 2, then `bash <the printed path> --uninstall` (removes the app, its cache
+folder and its preferences).

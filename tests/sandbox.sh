@@ -13,7 +13,7 @@ echo x > "$STATE/$P"; echo x > "$H/$P"; echo x > "/private/tmp/$P"
 trap 'rm -rf "$STATE" "$H/$P" "$H/$P.new" "/private/tmp/$P" "$PT"' EXIT
 run() { /usr/bin/sandbox-exec -f "$SB" -D HOME="$H" -D EXEC=/bin/bash -D INTERP=/bin/bash -D EXECDIR=/nonexistent \
           -D STATE="$STATE" -D PTMP="$PT" -D HELPER=/nonexistent -D KEYCHAINS=/nonexistent \
-          -D SHAREDTMP=/nonexistent -D HOMEMETA=/nonexistent /bin/bash -c "$1" 2>/dev/null; }
+          -D SHAREDTMP=/nonexistent /bin/bash -c "$1" 2>/dev/null; }
 fail=0
 check() { if run "$2"; then r=allowed; else r=denied; fi; [[ "$r" == "$1" ]] && echo "ok   $3: $r" || { echo "FAIL $3: $r"; fail=1; }; }
 check denied  '/usr/bin/true'                   "start another program"

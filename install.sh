@@ -5,12 +5,13 @@
 #   bash install.sh --from-source   build this exact commit yourself instead (needs Command Line Tools)
 #   bash install.sh --uninstall     remove the app, its cache and its settings
 #
-# What it does NOT do: no sudo, no changes outside ~/Applications and ~/Library/Caches/limitbar, no
+# What it does NOT do: no sudo, no changes outside ~/Applications, ~/Library/Caches/limitbar and (on
+# --uninstall) LimitBar's own preferences, no
 # Gatekeeper/quarantine overrides, no telemetry, no installing or signing in to any AI CLI.
 set -euo pipefail
 
 REPO="dancik/limitbar"
-VERSION="1.0.0"
+VERSION="1.0.1"
 # Pinned by this commit of install.sh: the release zip must match it byte for byte, and the source build
 # must check out exactly this commit.
 ZIP_SHA256="9320c568a48213deaf434df9a6b7d1b44fe218273a913412c7b8ded4465a633a"

@@ -300,21 +300,28 @@ enum Sandbox {
         let state: String, execDir: String
         switch v {
         case .grok: state = "\(home)/.grok"; execDir = dir
-        case .codex: state = "\(home)/.codex"; execDir = (dir as NSString).deletingLastPathComponent   // package root
+        case .codex:
+            // Homebrew: <Caskroom>/codex/<version>/bin/codex → the version folder. npm: <node_modules>/@openai/codex/
+            // bin/codex.js starts a native binary from the sibling package @openai/codex-<platform> → the whole
+            // @openai scope folder.
+            state = "\(home)/.codex"
+            let pkg = (dir as NSString).deletingLastPathComponent
+            let parent = (pkg as NSString).deletingLastPathComponent
+            execDir = (parent as NSString).lastPathComponent.hasPrefix("@") ? parent : pkg
         case .gemini: state = "\(home)/.gemini"; execDir = "\(home)/.gemini/antigravity-cli/bin"
         case .claude: return nil
         }
         // A script CLI (npm's `#!/usr/bin/env node`) is started through its checked interpreter, explicitly.
         guard let start = CLI.launch(bin), let interp = start.first else { return nil }
-        // agy signs in through /usr/bin/security and the keychain, talks to its helper over /tmp and its TLS
-        // stack stats files in your home folder; every other CLI gets none of that.
+        // agy signs in through /usr/bin/security and the keychain and talks to its helper over /tmp; every
+        // other CLI gets none of that.
         let none = "/nonexistent-limitbar"
         let agy = v == .gemini
         let argv = ["/usr/bin/sandbox-exec", "-f", profile, "-D", "HOME=\(home)", "-D", "EXEC=\(bin)",
                     "-D", "INTERP=\(interp)", "-D", "EXECDIR=\(execDir)", "-D", "STATE=\(state)", "-D", "PTMP=\(tmp)",
                     "-D", "HELPER=\(agy ? "/usr/bin/security" : none)",
                     "-D", "KEYCHAINS=\(agy ? "\(home)/Library/Keychains" : none)",
-                    "-D", "SHAREDTMP=\(agy ? "/private/tmp" : none)", "-D", "HOMEMETA=\(agy ? home : none)",
+                    "-D", "SHAREDTMP=\(agy ? "/private/tmp" : none)",
                     ] + start + args
         return Box(argv: argv, binary: bin, env: ["TMPDIR": tmp + "/"])
     }

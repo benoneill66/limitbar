@@ -7,8 +7,7 @@
 ;; Only for agy (Google Antigravity), which needs them to sign in and to reach its local helper; for the
 ;; other CLIs they point nowhere:
 ;;   HELPER   /usr/bin/security (reads agy's sign-in from your keychain)
-;;   KEYCHAINS ~/Library/Keychains     SHAREDTMP /private/tmp     HOMEMETA your home folder, names and
-;;            sizes only (Go's TLS stack stats files there; no file contents)
+;;   KEYCHAINS ~/Library/Keychains     SHAREDTMP /private/tmp
 ;; The CLI may start no program outside its own install folder — so no MCP server, hook or plugin
 ;; configured anywhere can run — and can read or write nothing of yours but its own STATE folder.
 ;; Network stays open: the quota answer comes from the vendor. In SBPL the LAST matching rule wins.
@@ -24,7 +23,9 @@
 (deny file-read* file-write*
   (subpath "/Users") (subpath (param "HOME")) (subpath "/Volumes")
   (subpath "/private/tmp") (subpath "/private/var/folders"))
-(allow file-read-metadata (literal "/Users") (literal (param "HOME")))
+;; stat() of any path stays allowed — Node and Go resolve real paths component by component. It gives
+;; existence, type and size of a path the CLI already knows; no file contents, no directory listings.
+(allow file-read-metadata)
 ;; ... except the CLI's own state, install folder and LimitBar's private temp
 (allow file-read* file-write* (subpath (param "STATE")) (subpath (param "PTMP")))
 (allow file-read* (subpath (param "EXECDIR")) (literal (param "EXEC")) (literal (param "INTERP")))
@@ -35,5 +36,4 @@
 
 ;; ---- agy only (see parameters above) ----
 (allow process-exec (literal (param "HELPER")))
-(allow file-read-metadata (subpath (param "HOMEMETA")))
 (allow file-read* file-write* (subpath (param "KEYCHAINS")) (subpath (param "SHAREDTMP")))

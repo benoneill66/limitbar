@@ -1,6 +1,6 @@
 # LimitBar
 
-**How much of your AI coding limits is left — in the macOS menu bar.** One glance for Claude Code,
+**How much of your AI coding limits you've used — in the macOS menu bar.** One glance for Claude Code,
 Codex, Gemini (Google Antigravity) and Grok Build; hover for the 5-hour and weekly windows and when
 they reset.
 
@@ -96,8 +96,9 @@ LimitBar runs these commands, and nothing else:
 no MCP server, hook or plugin you configured runs — and can read or write nothing in your home folder but
 its own state folder (`~/.codex`, `~/.gemini`, `~/.grok`), nor other users' folders, mounted volumes or
 shared temp. `agy` additionally needs `/usr/bin/security` and your keychain (that is where its sign-in
-lives), `/tmp` (its local helper) and file names — not contents — in your home folder. If the sandbox is
-unavailable, the CLI is not run at all.
+lives), `/tmp` (its local helper). Every CLI may still `stat` a path (Node and Go resolve paths that way) — that
+reveals whether a path exists, never its contents or a folder listing. If the sandbox is unavailable,
+the CLI is not run at all.
 
 How it protects you:
 
@@ -117,7 +118,7 @@ How it protects you:
 - **Release builds** are made by [`.github/workflows/release.yml`](.github/workflows/release.yml) on
   GitHub-hosted runners from the tagged commit, with a signed
   [build provenance attestation](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
-  Check it yourself: `gh attestation verify LimitBar-1.0.0.zip --repo dancik/limitbar`.
+  Check it yourself: `gh attestation verify LimitBar-1.0.1.zip --repo dancik/limitbar`.
 
 The app is ad-hoc signed, not notarized (there is no paid Apple Developer ID behind it). Installed with
 the script, macOS opens it normally; a zip downloaded **in a browser** will be blocked by Gatekeeper —
