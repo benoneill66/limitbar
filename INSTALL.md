@@ -12,9 +12,12 @@ Follow these steps exactly. Do not improvise other install methods.
 3. **Tell the user** in two or three sentences what it does: downloads the release zip from GitHub,
    checks its SHA-256 against the digest written in the script (and GitHub build provenance if the
    GitHub CLI `gh` is installed and signed in — without it the SHA-256 check alone applies, which is
-   expected), quits a running LimitBar, replaces `~/Applications/LimitBar.app` and opens it. No sudo.
-4. **Run it:** `bash <the printed path>`. Never with `sudo`. If it stops with a verification error, stop
-   and report the error — do not work around it.
+   expected), quits a running LimitBar, installs `LimitBar.app` into `/Applications` (into
+   `~/Applications` on a standard, non-admin account) and opens it. No sudo, no password prompt.
+   `~/Applications/LimitBar.app` always exists afterwards (a link when the app is in `/Applications`).
+4. **Run it:** `bash <the printed path>`. Never with `sudo`. If it exits with any error — a failed check,
+   or "exists and is not your LimitBar" — stop and report it. Do not work around it, and never delete or
+   move a file the installer refused to touch.
 5. **Check what LimitBar sees** (asks every installed CLI once; allow up to ~60 s):
    ```bash
    ~/Applications/LimitBar.app/Contents/MacOS/LimitBar --probe

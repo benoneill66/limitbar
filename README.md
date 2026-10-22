@@ -28,7 +28,14 @@ The link is pinned to one commit, so the script you run is exactly the one you c
 [here](https://github.com/dancik/limitbar/blob/f9d9eca2e3a6857e973ef3dedad9b797c2dd402f/install.sh). It downloads the release
 build, checks its SHA-256 against the digest written into that script, checks GitHub's build provenance
 when the [GitHub CLI](https://cli.github.com) is installed and signed in, and copies `LimitBar.app` to
-`~/Applications`. No `sudo`, nothing outside `~/Applications` and `~/Library/Caches/limitbar`.
+`/Applications`, where Spotlight and Launchpad find it. Any admin account can write there without a
+password, the same as a drag-and-drop install; on a standard account it goes to `~/Applications`
+instead. No `sudo`, nothing outside `LimitBar.app`, `~/Applications` and `~/Library/Caches/limitbar`.
+
+`/Applications` is shared by every account on the Mac, and any admin account can replace an app there
+without a password — that is true of every app installed there, not only this one. If you'd rather keep
+LimitBar private to your account, run the last command as `LIMITBAR_PER_USER=1 bash "$d/install.sh"`
+and it goes to `~/Applications` (Spotlight may not find it there).
 
 Prefer to compile it yourself? `bash "$d/install.sh" --from-source` builds the same pinned
 commit on your Mac (needs Command Line Tools: `xcode-select --install`).
@@ -76,7 +83,8 @@ If you want live Claude numbers at no cost, let Claude Code hand them over on ev
 "statusLine": { "type": "command", "command": "~/Applications/LimitBar.app/Contents/MacOS/LimitBar --statusline" }
 ```
 
-It prints `Claude Opus · 5h 23% · 7d 41%` in Claude Code and saves only those percentages and reset
+`~/Applications/LimitBar.app` works wherever LimitBar was installed: with the app in `/Applications` it is
+a link to it. It prints `Claude Opus · 5h 23% · 7d 41%` in Claude Code and saves only those percentages and reset
 times to `~/Library/Caches/limitbar/claude-status.json`. LimitBar never edits your settings itself.
 
 ## Security and privacy
@@ -132,7 +140,8 @@ Found a problem? See [SECURITY.md](SECURITY.md).
 d="$(mktemp -d)" && curl -fsSLo "$d/install.sh" https://raw.githubusercontent.com/dancik/limitbar/f9d9eca2e3a6857e973ef3dedad9b797c2dd402f/install.sh && bash "$d/install.sh" --uninstall
 ```
 
-or quit LimitBar from its panel and delete `~/Applications/LimitBar.app` and `~/Library/Caches/limitbar`.
+or quit LimitBar from its panel and delete `LimitBar` from Applications, `~/Applications/LimitBar.app`
+(if present) and `~/Library/Caches/limitbar`.
 
 ## Build and test
 

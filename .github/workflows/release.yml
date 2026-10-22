@@ -31,6 +31,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # This version's section of CHANGELOG.md, then the provenance line.
+          awk -v v="## $(cat VERSION)" '$0==v{f=1;next} /^## /{f=0} f' CHANGELOG.md > notes.md
+          test -s notes.md
+          printf '\nBuilt from commit %s by .github/workflows/release.yml on a GitHub-hosted runner. SHA-256: %s. Install with the command in the README; it verifies this digest.\n' \
+            "$GITHUB_SHA" "$(cut -d' ' -f1 SHA256SUMS)" >> notes.md
           gh release create "$GITHUB_REF_NAME" "LimitBar-$(cat VERSION).zip" SHA256SUMS \
-            --title "LimitBar $(cat VERSION)" \
-            --notes "Built from commit $GITHUB_SHA by .github/workflows/release.yml on a GitHub-hosted runner. SHA-256: $(cut -d' ' -f1 SHA256SUMS). Install with the command in the README; it verifies this digest."
+            --title "LimitBar $(cat VERSION)" --notes-file notes.md

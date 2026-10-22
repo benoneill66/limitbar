@@ -15,7 +15,13 @@ jobs:
   fresh:
     runs-on: macos-15
     steps:
-      - name: install exactly as the README says
+      - name: an existing 1.0.2 install (it used ~/Applications)
+        run: |
+          p="$(mktemp -d)"
+          curl -fsSLo "$p/install.sh" "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/f9d9eca2e3a6857e973ef3dedad9b797c2dd402f/install.sh"
+          bash "$p/install.sh"
+          test -d ~/Applications/LimitBar.app && test ! -L ~/Applications/LimitBar.app
+      - name: install exactly as the README says (upgrades it)
         env:
           INSTALL_COMMIT: ${{ inputs.install_commit }}
         run: |
@@ -23,7 +29,15 @@ jobs:
           d="$(mktemp -d)" && echo "D=$d" >> "$GITHUB_ENV"
           curl -fsSLo "$d/install.sh" "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$INSTALL_COMMIT/install.sh"
           bash "$d/install.sh"
-          test -d ~/Applications/LimitBar.app
+      - name: the app is in /Applications with its icon, and the old path is a link to it
+        run: |
+          A=/Applications/LimitBar.app
+          test -d "$A" && test ! -L "$A"
+          test "$(readlink ~/Applications/LimitBar.app)" = "$A"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconFile' "$A/Contents/Info.plist")" = AppIcon
+          test -s "$A/Contents/Resources/AppIcon.icns"
+          codesign --verify --strict "$A"
+          test "$(ls /Applications | grep -c '^LimitBar')" = 1
       - name: nothing installed yet → all four "missing"
         run: |
           ~/Applications/LimitBar.app/Contents/MacOS/LimitBar --probe | tee p1.json
@@ -51,4 +65,5 @@ jobs:
       - name: uninstall leaves nothing behind
         run: |
           bash "$D/install.sh" --uninstall
+          test ! -e /Applications/LimitBar.app && test ! -L ~/Applications/LimitBar.app
           test ! -e ~/Applications/LimitBar.app && test ! -e ~/Library/Caches/limitbar
