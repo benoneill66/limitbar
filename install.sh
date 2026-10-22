@@ -12,11 +12,11 @@
 set -euo pipefail
 
 REPO="dancik/limitbar"
-VERSION="1.0.2"
+VERSION="1.0.3"
 # Pinned by this commit of install.sh: the release zip must match it byte for byte, and the source build
 # must check out exactly this commit.
-ZIP_SHA256="90602db824b0b26dc86a531f293b7a2e559dd6f92cd503c935055420aa80ab37"
-SOURCE_COMMIT="40db32057998ff7f2b8c43d105ff2ef7fd14e35d"
+ZIP_SHA256="7d27c9d93d5ed278705981d440f35b5bb9988207043250430efcd3716a28d82d"
+SOURCE_COMMIT="dae5aaca94650358e6399791e0e93159ee99e517"
 
 BUNDLE_ID="io.github.dancik.limitbar"
 # /Applications when this account may write there — every admin account can, without a password, the
