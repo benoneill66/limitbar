@@ -64,14 +64,14 @@ if [[ "${1:-}" == "--uninstall" ]]; then
   LEFT=0
   for p in "/Applications/LimitBar.app" "$HOME_APP"; do
     if [[ -L "$p" ]]; then
-      mv "$p" "$ASIDE/link" 2>/dev/null || { echo "could not remove the link $p"; LEFT=1; continue; }
+      mv "$p" "$ASIDE/link" 2>/dev/null || { echo "could not remove the link $p"; LEFT=1; KEEP=1; continue; }
       if [[ -L "$ASIDE/link" ]]; then rm -f "$ASIDE/link"; else put_back "$ASIDE/link" "$p"; LEFT=1; fi
       continue
     fi
     [[ -e "$p" ]] || continue
     # Move it aside first and check what was actually moved, so nothing swapped in after a check is deleted.
     if ! is_ours "$p"; then echo "left $p alone: it is not your LimitBar"; LEFT=1; continue; fi
-    mv "$p" "$ASIDE/LimitBar.app" 2>/dev/null || { echo "could not remove $p (no permission) — delete it in Finder"; LEFT=1; continue; }
+    mv "$p" "$ASIDE/LimitBar.app" 2>/dev/null || { echo "could not remove $p — delete it in Finder"; LEFT=1; KEEP=1; continue; }
     if is_ours "$ASIDE/LimitBar.app"; then rm -rf "$ASIDE/LimitBar.app"
     else put_back "$ASIDE/LimitBar.app" "$p"; echo "left $p alone: it is not your LimitBar"; LEFT=1
     fi
@@ -144,7 +144,7 @@ fi
 # above is ever deleted with $STAGE.
 set_aside() {   # set_aside <path> <name in $STAGE> [link-ok]
   [[ -e "$1" || -L "$1" ]] || return 0
-  mv "$1" "$STAGE/$2" || die "could not move $1 aside"
+  mv "$1" "$STAGE/$2" || { KEEP=1; die "could not move $1 aside — anything already moved is kept in $STAGE"; }
   if is_ours "$STAGE/$2" || [[ "${3:-}" == link-ok && -L "$STAGE/$2" ]]; then return 0; fi
   put_back "$STAGE/$2" "$1"
   die "$1 changed during the install and is not LimitBar — left as it was"
