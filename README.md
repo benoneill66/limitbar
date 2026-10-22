@@ -73,6 +73,12 @@ Installed somewhere else? Point LimitBar at it:
 Hover (or click to pin) for every window, reset times, plan, and anything that needs attention —
 "Signed out — run `codex login`", for example.
 
+Click **Providers** at the bottom of the panel to choose which services appear. Choices are saved
+between launches and apply to the menu bar, panel and missing-CLI list. Hidden providers are excluded
+from future refreshes; a reading already queued or running may finish. Turning a provider back on
+requests a fresh reading. If all providers are off, the LimitBar menu item stays available so you can
+turn them back on. All providers are enabled by default.
+
 For confirmed 5-hour and 7-day windows, the panel also shows pacing. A solid usage bar sits above a
 segmented time bar: five hourly segments for 5-hour limits, seven daily segments for weekly limits.
 The lower bar fills as time passes, including a partial segment for the current hour or day. Both bars

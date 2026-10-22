@@ -39,6 +39,10 @@ struct TrayView: View {
 
     var body: some View {
         HStack(spacing: 8) {
+            if store.installed.isEmpty {
+                Image(systemName: "gauge").font(.system(size: 13))
+                Text("LimitBar").font(.system(size: 12))
+            }
             ForEach(store.installed, id: \.self) { v in
                 let s = store.snaps[v]
                 HStack(spacing: 3) {
@@ -77,7 +81,9 @@ struct TrayView: View {
 struct PanelView: View {
     @ObservedObject var store: Store
     var onQuit: () -> Void
+    var onResize: () -> Void = {}
     @State private var login = SMAppService.mainApp.status == .enabled
+    @State private var showProviders = false
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 30)) { context in
@@ -86,7 +92,15 @@ struct PanelView: View {
                     if i > 0 { Hairline() }
                     VendorSection(vendor: v, snap: store.snaps[v], busy: store.busy.contains(v), now: context.date)
                 }
-                let missing = Vendor.allCases.filter { !store.installed.contains($0) }
+                if store.enabled.isEmpty {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("No providers selected").font(.system(size: 12, weight: .medium))
+                        Text("Choose providers below to show limits.").font(.system(size: 11)).foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(12)
+                }
+                let missing = store.enabled.filter { !store.installed.contains($0) }
                 if !missing.isEmpty {
                     if !store.installed.isEmpty { Hairline() }
                     MissingRow(vendors: missing)
@@ -96,24 +110,59 @@ struct PanelView: View {
             }
             .frame(width: 328)
         }
+        .onChange(of: showProviders) { _, _ in onResize() }
     }
 
     private var footer: some View {
-        HStack(spacing: 6) {
-            FooterButton(title: store.busy.isEmpty ? "Refresh" : "Refreshing…") { store.refresh(force: true) }
-                .disabled(!store.busy.isEmpty)
-            Spacer()
-            HStack(spacing: 6) {
-                Text("Launch at Login").font(.system(size: 12))
-                Toggle("", isOn: Binding(get: { login }, set: { on in
-                    do {
-                        if on { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }
-                    } catch {}
-                    login = SMAppService.mainApp.status == .enabled
-                })).toggleStyle(.switch).controlSize(.mini).labelsHidden()
+        VStack(spacing: 5) {
+            HStack {
+                Button { showProviders.toggle() } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: "slider.horizontal.3")
+                        Text("Providers")
+                        Image(systemName: showProviders ? "chevron.up" : "chevron.down").font(.system(size: 9))
+                    }
+                    .font(.system(size: 12))
+                    .padding(.vertical, 4)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Choose providers")
+                .accessibilityValue(showProviders ? "Expanded" : "Collapsed")
+                Spacer()
+                Text("\(store.enabled.count) of \(Vendor.allCases.count) selected")
+                    .font(.system(size: 11)).foregroundStyle(.secondary)
             }
-            Spacer()
-            FooterButton(title: "Quit", action: onQuit)
+            .padding(.horizontal, 6)
+            if showProviders {
+                LazyVGrid(columns: [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)], alignment: .leading, spacing: 8) {
+                    ForEach(Vendor.allCases, id: \.self) { vendor in
+                        Toggle(vendor.name, isOn: Binding(
+                            get: { !store.hiddenVendors.contains(vendor) },
+                            set: { store.setEnabled(vendor, $0) }
+                        ))
+                        .toggleStyle(.checkbox)
+                        .font(.system(size: 12))
+                    }
+                }
+                .padding(.horizontal, 6)
+                .padding(.bottom, 7)
+            }
+            HStack(spacing: 6) {
+                FooterButton(title: store.visibleBusy ? "Refreshing…" : "Refresh") { store.refresh(force: true) }
+                    .disabled(store.visibleBusy || store.enabled.isEmpty)
+                Spacer()
+                HStack(spacing: 6) {
+                    Text("Launch at Login").font(.system(size: 12))
+                    Toggle("", isOn: Binding(get: { login }, set: { on in
+                        do {
+                            if on { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }
+                        } catch {}
+                        login = SMAppService.mainApp.status == .enabled
+                    })).toggleStyle(.switch).controlSize(.mini).labelsHidden()
+                }
+                Spacer()
+                FooterButton(title: "Quit", action: onQuit)
+            }
         }
         .padding(EdgeInsets(top: 6, leading: 8, bottom: 8, trailing: 8))
     }

@@ -17,7 +17,7 @@ enum PanelPreview {
             .claude: Snapshot(vendor: .claude, plan: "Max", bar: claude[0], windows: claude, measuredAt: now),
             .codex: Snapshot(vendor: .codex, plan: "ChatGPT Pro", bar: codex[0], windows: codex, measuredAt: now),
             .gemini: .status(.gemini, .missing), .grok: .status(.grok, .missing)
-        ])
+        ], preferences: nil)
         for (name, appearance) in [("light", NSAppearance.Name.aqua), ("dark", .darkAqua)] {
             let host = NSHostingView(rootView: PanelView(store: store, onQuit: {}))
             host.appearance = NSAppearance(named: appearance)
