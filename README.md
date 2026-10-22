@@ -73,6 +73,18 @@ Installed somewhere else? Point LimitBar at it:
 Hover (or click to pin) for every window, reset times, plan, and anything that needs attention —
 "Signed out — run `codex login`", for example.
 
+For confirmed 5-hour and 7-day windows, the panel also shows pacing. A solid usage bar sits above a
+segmented time bar: five hourly segments for 5-hour limits, seven daily segments for weekly limits.
+The lower bar fills as time passes, including a partial segment for the current hour or day. Both bars
+share the same scale. Usage ahead of the time bar is over an even allowance; usage behind it is under.
+Each row shows the time remaining. Hover a row for the elapsed percentage, exact reset time and
+the difference in percentage points (pp). This compares usage with even spending over the full window.
+Time includes nights and weekends.
+
+Pacing updates every 30 seconds while the panel is open. It uses the last reported usage, whose age is
+shown above the rows. Missing reset times, expired windows and unconfirmed window lengths have no pacing.
+Older cached readings gain pacing after the next successful refresh.
+
 ## Optional: free Claude readings from the status line
 
 By default LimitBar runs `claude -p /usage` at most once every 20 minutes (no model call, ~3 s of CPU).
@@ -147,6 +159,8 @@ or quit LimitBar from its panel and delete `LimitBar` from Applications, `~/Appl
 
 ```bash
 scripts/build-app.sh build                  # → build/LimitBar.app (native arch)
+swift test                                 # pacing arithmetic and edge cases
+build/LimitBar.app/Contents/MacOS/LimitBar --preview-panel build/preview  # sample PNGs, no account access
 build/LimitBar.app/Contents/MacOS/LimitBar --probe   # what every CLI returns right now, as JSON
 tests/states.sh build/LimitBar.app
 tests/sandbox.sh

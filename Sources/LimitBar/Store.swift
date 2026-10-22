@@ -41,7 +41,12 @@ final class Store: ObservableObject {
         }
     }
 
-    init() {
+    init(previewSnapshots: [Vendor: Snapshot]? = nil) {
+        // A preview must never poll CLIs, read accounts, or change the user's cache.
+        if let snapshots = previewSnapshots {
+            snaps = snapshots
+            return
+        }
         loadCache()
         let ws = NSWorkspace.shared.notificationCenter
         ws.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { [weak self] _ in self?.asleep = true }
